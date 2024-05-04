@@ -1,7 +1,6 @@
-
 pipeline {
     agent any
-   
+
     stages {
         stage('Build') {
             steps {
@@ -11,81 +10,81 @@ pipeline {
 
         stage('Unit and Integration Tests') {
             steps {
-                echo "Run unit and Integration tests using Selenium"
+                echo "Run unit and integration tests using Selenium"
             }
-            
-       post {
-        success {
-            echo "The Unit and Integration Testing Phase was successful without errors."
-            emailext(
-                to: 'krishmad486@gmail.com',
-                subject:"The status of the Tests:  ${currentBuild.result}",
-                body:"Please consult the log files for more details regarding the process.",
-                attachLog: true
-            )
-        }
-        failure {
-            echo "The phase of Unit and Integration Testing has encountered a failure.."
-            emailext(
-                to: 'krishmad486@gmail.com',
-                subject:"The status of the Unit and Integration Test:  ${currentBuild.result}",
-                body:"Please consult the log files for more details regarding the process.",
-                attachLog: true
-            )
-        }
-    }
+            post {
+                success {
+                    echo "Unit and Integration Testing was successful."
+                    emailext(
+                        to: 'krishmad486@gmail.com',
+                        subject: "Tests Passed: ${currentBuild.currentResult}",
+                        body: "Unit and Integration tests passed successfully.",
+                        attachLog: true
+                    )
+                }
+                failure {
+                    echo "Unit and Integration Testing failed."
+                    emailext(
+                        to: 'krishmad486@gmail.com',
+                        subject: "Tests Failed: ${currentBuild.currentResult}",
+                        body: "Unit and Integration tests failed. Check the logs for details.",
+                        attachLog: true
+                    )
+                }
+            }
         }
 
         stage('Code Analysis') {
             steps {
-                echo "Incorporate SonarQube for conducting code analysis."
+                echo "Performing code analysis with SonarQube."
             }
         }
 
         stage('Security Scan') {
             steps {
-                echo "Utilize OWASP ZAP for conducting security scans."
+                echo "Conducting security scan with OWASP ZAP."
             }
-            
-                   post {
-        success {
-            echo "The security scanning process has been completed successfully without encountering any issues."
-            emailext(            
-                to: 'krishmad486@gmail.com',
-                subject:"The status of the Security Scanning Process:  ${currentBuild.result}",
-                body:"Please consult the log files for more details regarding the process.",
-                attachLog: true
-            )
+            post {
+                success {
+                    echo "Security Scan passed."
+                    emailext(
+                        to: 'krishmad486@gmail.com',
+                        subject: "Security Scan Passed: ${currentBuild.currentResult}",
+                        body: "Security scan completed successfully.",
+                        attachLog: true
+                    )
+                }
+                failure {
+                    echo "Security Scan failed."
+                    emailext(
+                        to: 'krishmad486@gmail.com',
+                        subject: "Security Scan Failed: ${currentBuild.currentResult}",
+                        body: "Security scan encountered issues. Check the logs for details.",
+                        attachLog: true
+                    )
+                }
+            }
         }
-
-        failure {
-            echo "The Security Scanning Process has failed." 
-            emailext(
-                to: 'krishmad486@gmail.com',
-                subject:"The status of the Security Scanning Process:  ${currentBuild.result}",
-                body:"Please consult the log files for more details regarding the process.",
-                attachLog: true
-            )
-        }
-    }
-    }
 
         stage('Deploy to Staging') {
             steps {
-                echo "Deploy to the staging server on an AWS EC2 instance."
+                echo "Deploying to staging server on AWS EC2 instance."
+                // Add deployment steps here
             }
         }
 
         stage('Integration Tests on Staging') {
             steps {
-                echo "Execute integration tests in the staging environment."
+                echo "Executing integration tests in staging environment."
+                // Add integration test steps here
             }
         }
 
         stage('Deploy to Production') {
             steps {
-                echo "Commencing the deployment to the production environment."
+                echo "Deploying to production environment."
+                // Add production deployment steps here
             }
-}
-}
+        }
+    }
 }
